@@ -3,8 +3,8 @@ pragma solidity ^0.8.0;
 
 import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
 import '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
-import "./Interfaces/ICurveFi_Deposittripool.sol";
-import "./Interfaces/IdepositConvex.sol";
+import "./ICurveFi_Deposittripool.sol";
+import "./IdepositConvex.sol";
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
 contract lpstake {
@@ -46,6 +46,7 @@ contract lpstake {
 
     function depositTokens(uint256 _amount) public {
         // amount should be > 0
+        require(_amount>0);
         uint256 division= _amount/3;
 
         TransferHelper.safeTransferFrom(USDC, msg.sender, address(this), _amount);
@@ -94,6 +95,7 @@ contract lpstake {
     }
 
     function depostitInConvex(uint256 curveLPBalance) internal {
+        TransferHelper.safeApprove(curveFi_LPToken,depositConvex, curveLPBalance);
         IdepositConvex(depositConvex).deposit(pid,curveLPBalance,true);
     }
     
